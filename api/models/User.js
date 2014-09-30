@@ -22,6 +22,10 @@ module.exports = {
             type: 'string',
             required: true
         },
+        // Add a One Way Relation to UserRoles
+        userroles: {
+            collection: 'userrole'
+        },
         // override default toJSON
         toJSON: function() {
             var obj = this.toObject();
