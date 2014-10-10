@@ -9,7 +9,20 @@ var passport = require('passport');
 module.exports = {
     
     login: function(req, res) {
-        res.view();
+		// check if current user can login
+		PermissionService.isAllowed(req.user, [{group: 'comment', permission: ['can delete own', 'can create new', 'not presetnt']}] , function(err, success) {
+			if(err) {
+				console.log("ERROR " + err);
+				console.log(err);
+				res.send(err);
+			}
+			if(success) {
+				console.log("SUCCESS " + success);
+				console.log(success);
+				res.view();
+			}
+		});
+        
     },
     process: function(req, res) {
         passport.authenticate('local', function(err, user, info) {
