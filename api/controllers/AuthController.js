@@ -10,7 +10,7 @@ module.exports = {
     
     login: function(req, res) {
 		// check if current user can login
-		PermissionService.isAllowed(req.user, [{group: 'comment', permission: ['can delete own', 'can create new', 'not presetnt']}] , function(err, success) {
+		PermissionService.isAllowed(req.user, [ { group: 'auth', permission: ['can register'] } ] , function(err, success) {
 			if(err) {
 				console.log("ERROR " + err);
 				console.log(err);

@@ -1,30 +1,31 @@
+
 var Promise = require('bluebird');
 
-module.exports = {
-/*
-	isAllowed: function(user, opts, cb) {
-		// opts is an array: [{ group: '...', permission: [..] }, { group: '...', permission: [..] }]
-		opts.forEach( function(opt) {
-			isAllowedGroup(user, opt, cb);
-		});
-	},
-	
-	// accepts single opt object
-	isAllowedGroup: function(user, opt, cb) {
-		// permission within the opt object is an array e.g. permission: ['can edit', 'can view']
-		opt.permission.forEach( function(perm) {
-			isAllowedPerm(user, opt.group, perm, cb);
-		});
-	},
-	
-	isAllowedPerm: function(user, group, perm, cb) {
 
-		Permission.find( { where: { group: opt.group, permission: perm } }).exec( function(err, permission) {
-			cb(null, permission);
-		});
-	
-	}
-*/
+// Returns Promise with then returning array of user's roles
+function getUserRoles(user)
+{
+    var userRoles = [];
+
+    if(typeof user === 'undefined') {
+
+        // User is not logged in, return default (Anonymous)
+        userRoles.push( sails.config.appConfig.constants.PERM_ANONYMOUS_LABEL);
+        return Promise.resolve(userRoles);
+
+    } else {
+
+        return User.findOne(user[0].id).populate('userroles').then( function(user) { 
+            user.userroles.forEach( function(role) {
+                userRoles.push(role.name)
+            });
+            return userRoles;
+
+        });
+    }
+}
+
+module.exports = {
 	
 	isAllowed: function(user, opts, cb) {
 		
@@ -36,76 +37,52 @@ module.exports = {
 			});
 		});
 		
-		var hasPermissions = true;
-		var i = 0;
-		var userRoles = [];
-		
-		if(typeof user === 'undefined') {
-			userRoles.push('AnonymousTEMP');
-		} else {
-			User.findOne(user[0].id).populate('userroles').then( function(user) { 
-				user.userroles.forEach( function(role) {
-					userRoles.push(role.name)
-				});
-				
-				console.log(userRoles);
-				return userRoles
-			}).then( function(userRoles) {
-		
-				Promise.all(promises).then(function(perms) {
-				console.log("THEN");
-				console.log(perms);
-				
-				// If the permission is not defined then
-				// false will Block, true will be let it pass
-				hasPermissions = false;
-				for(i = 0; i < perms.length; i++) {
-					for(j = 0; j < perms[i].userroles.length; j++) {
-						if( perms[i].userroles[j].name == userRoles ) {
-							// usersRole has permission for atleast one of the permission
-							// no need to check for other permission
-							hasPermissions = true;
-							break;
-						}
-					}
-				}
-				
-				cb(null, true);
-				return perms;
-				
-				}).catch( function(err) {
-					console.log("CATCH");		
-					console.log(err); 
-				});
-			});
-		}
-		
+        // Run all promises
+        Promise.join( Promise.all(promises), getUserRoles(user), function(permissions, userRoles) {
 
+            // Check if there are undefined permissions
+            if( permissions.some( function(perm) { return typeof perm === 'undefined' } ) )
+            {
+                // Atleast one permission is not defined
+                if( sails.config.appConfig.constants.PERM_BLOCK_UNDEFINED ) {
+                    cb("A PERM NOT DEFINED", false);
+                    return;
+                }
+            }
 
+            // Now remove undefined permissions
+            permissions = permissions.filter(Boolean);
+            // Iterate over each permission and match the role allowed with
+            // user's roles
+            var notAllowed = permissions.some( function(perm) {
+                return perm.userroles.some( function(userrole) {
+                    // match by text not by id
+                    if( userRoles.indexOf(userrole.name) < 0)
+                    {
+                        // First perm not matched, callback with failure
+                        //console.log("NOT FOUND " + userrole.name);
+                        return true;    // .some exits on true
+                    } else {
+                        // Debug
+                        //console.log("FOUND " + userrole.name);
+                        return false;   // perm ok, check next perm
+                    }
+                });
+            });
 
+            if(notAllowed) {
+                cb("NOT ALLOWED", false);
+            } else {
+                cb(null, true);
+            }
 
-	},
-	
-		
-	/*
-	Permission.isAllowed(req.user.id, 'comment', ['can create', 'view own comment', 'view others comment'], function(err, res) {
-		if( Permission.exists('comment', ['can create', 'view own comment', 'view others comment']) ) {
-			foreach( text )
-			{
-				if( Permission('comment', 'can create etc.').getAllowedUserRole =isOneOf= UserRole.getUserRole(anonymous||req.user.userrole) ) {
+            /*
+            console.log(notAllowed);
+            console.log(permissions);
+            console.log(userRoles);
+            */
 
-				}
-				else {
-					return false;
-				}
-			}
-			return true; // whole foreach passed 
-		}
-		else {
-			// Permission does not exists, return true for pass by default. return to stop by default
-			return true;
-		}
-	}),
-	*/
+        });
+	}
 
 };
