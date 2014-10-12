@@ -1,0 +1,21 @@
+<% data.forEach( function(el) { %>
+
+    <% for( var prop in el ) { %>   
+        <% if( el.hasOwnProperty(prop) ) { %>
+            <%= prop %>
+            <%= el[prop] %>
+            <br>
+        <% } %>
+    <% } %>
+<br>
+<% }) %>
+
+
+<!--
+<% for(var prop in data[0]) { %>
+<%= prop %>
+<%= data[0][prop] %>
+<br>
+<% } %>
+-->
+

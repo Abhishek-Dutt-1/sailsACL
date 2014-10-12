@@ -35,7 +35,18 @@ module.exports.routes = {
 	'/': {
 		view: 'homepage'
 	},
-  
+ 
+    //////////////// Developer area
+	'/dev': {
+        controller: 'DevController'
+	},
+
+  	'/dev/crud/:model': {
+        controller: 'DevController',
+            action: 'crud'
+	},
+    /////////////// End Developer routes
+    
 	'GET /login': {
 		controller: 'AuthController',
 		action: 'login'

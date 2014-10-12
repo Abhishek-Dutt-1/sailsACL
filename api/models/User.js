@@ -26,6 +26,16 @@ module.exports = {
         userroles: {
             collection: 'userrole'
         },
+        // one to many relation to track users articles
+        articles: {
+            collection: 'article',
+            via: 'postedBy'
+        },
+        // one to many relation to track users comments
+        comments: {
+            collection: 'comment',
+            via: 'postedBy'
+        },
         // override default toJSON
         toJSON: function() {
             var obj = this.toObject();
