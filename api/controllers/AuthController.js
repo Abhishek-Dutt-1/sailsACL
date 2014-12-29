@@ -27,7 +27,7 @@ module.exports = {
     process: function(req, res) {
         passport.authenticate('local', function(err, user, info) {
             if( (err)||(!user) ) {
-                return res.send({
+                return res.send(401, {
                     message: 'login failed'
                 });
                 res.send(err);
@@ -35,7 +35,8 @@ module.exports = {
             req.logIn(user, function(err) {
                 if(err) res.send(err);
                 return res.send({
-                    message: 'login successful'
+                    message: 'login successful',
+			user: user
                 });
             });
         }) (req, res);
