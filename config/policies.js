@@ -50,12 +50,14 @@ module.exports.policies = {
 	// }
 	
 //	'*': "authenticated",
-    '*': true,
+/*  
+  '*': true,
 	UserController: {
 		'create': true,
 	},
 	AuthController: {
 		'*': true,
 	}
-
+*/
+'*': ['passport']
 };
