@@ -1,3 +1,4 @@
+var jwt = require('jsonwebtoken');
 /**
  * Authentication Controller
  *
@@ -168,7 +169,10 @@ var AuthController = {
         // Upon successful login, send the user to the homepage were req.user
         // will available.
 ////////////////////////////////FINALLY SEND THE TOKEN
-	return res.send(req.user);
+        var token = jwt.sign(user.id, 'secret');
+        console.log(token);
+        return res.send({token: token, user: req.user});
+        //return res.send(req.user);
         //res.redirect('/');
       });
     });

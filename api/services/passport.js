@@ -356,8 +356,6 @@ passport.disconnect = function (req, res, next) {
 };
 
 passport.serializeUser(function (user, next) {
-console.log("SerializeUser");
-console.log(user);
   next(null, user.id);
 });
 
