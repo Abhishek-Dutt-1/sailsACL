@@ -10,6 +10,8 @@ function hashPassword (passport, next) {
   if (passport.password) {
     bcrypt.hash(passport.password, 10, function (err, hash) {
       passport.password = hash;
+// encrypt the passwordConfirmation also
+	passport.passwordConfirmation = hash;
       next(err, passport);
     });
   } else {
@@ -32,6 +34,14 @@ function hashPassword (passport, next) {
  * the user, but not the authentication data, to and from the session.
  */
 var Passport = {
+// Password match custom validation
+// ref. sailsjs model > validation documentation
+	types: {
+		passwordConfirmationMatch: function(password) {
+			return password === this.passwordConfirmation;
+		}
+	},
+
   attributes: {
     // Required field: Protocol
     //
@@ -45,7 +55,10 @@ var Passport = {
     //
     // When the local strategy is employed, a password will be used as the
     // means of authentication along with either a username or an email.
-    password: { type: 'string', minLength: 8 },
+    password: { type: 'string', minLength: 8, passwordConfirmationMatch: true },
+// Added password confirmation (only for local) - Abhishek
+// From sailsjs model > validation documentation
+	passwordConfirmation: {type: 'string'},
 
     // Provider fields: Provider, identifer and tokens
     //
@@ -90,6 +103,7 @@ var Passport = {
    * @param {Function} next
    */
   beforeCreate: function (passport, next) {
+console.log(passport);
     hashPassword(passport, next);
   },
 

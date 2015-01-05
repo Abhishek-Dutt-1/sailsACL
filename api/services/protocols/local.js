@@ -23,28 +23,35 @@ var validator = require('validator');
  * @param {Function} next
  */
 exports.register = function (req, res, next) {
-  var email    = req.param('email')
-    , username = req.param('username')
-    , password = req.param('password');
+  var firstname = req.param('firstName'); // these should match incoming POST request
+  var lastname = req.param('lastName');
+  var username = req.param('username');
+  var country = req.param('country');
+  var email    = req.param('email');
+  var password = req.param('password');
+  var passwordConfirmation = req.param('passwordConfirmation');
 
   if (!email) {
     req.flash('error', 'Error.Passport.Email.Missing');
     return next(new Error('No email was entered.'));
   }
-
+/*	USERNAME IS NOT USED --Abhishek 5/1/2015
   if (!username) {
     req.flash('error', 'Error.Passport.Username.Missing');
     return next(new Error('No username was entered.'));
   }
-
+*/
   if (!password) {
     req.flash('error', 'Error.Passport.Password.Missing');
     return next(new Error('No password was entered.'));
   }
 
   User.create({
-    username : username
-  , email    : email
+    firstname : firstname,
+    lastname  : lastname,
+    username  : username,
+    country   : country,
+    email     : email
   }, function (err, user) {
     if (err) {
       if (err.code === 'E_VALIDATION') {
@@ -59,11 +66,14 @@ exports.register = function (req, res, next) {
     }
 
     Passport.create({
-      protocol : 'local'
-    , password : password
-    , user     : user.id
+	protocol : 'local',
+	password : password,
+	passwordConfirmation: passwordConfirmation,
+	user     : user.id
     }, function (err, passport) {
       if (err) {
+console.log("2");
+console.log(err);
         if (err.code === 'E_VALIDATION') {
           req.flash('error', 'Error.Passport.Password.Invalid');
         }
