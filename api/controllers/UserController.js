@@ -6,6 +6,21 @@
  */
 
 module.exports = {
-	
+/*
+	create: function(req, res) {
+		User.create(req.body, function(err, user) {
+			console.log("Custom Create");
+			if(err) return res.send(400, err);
+			res.send(user);
+		});
+	},
+*/
+/*
+	_config: {
+		actions: false,
+		shortcuts: false,
+		rest: false
+	}
+*/	
 };
 

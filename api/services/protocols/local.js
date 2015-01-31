@@ -46,7 +46,10 @@ exports.register = function (req, res, next) {
     return next(new Error('No password was entered.'));
   }
 
-  User.create({
+// User.createUserWithDefaults is used insetead of User.create
+// to attach a default userrole
+//  User.create({
+  User.createUserWithDefaults({
     firstname : firstname,
     lastname  : lastname,
     username  : username,
@@ -72,8 +75,6 @@ exports.register = function (req, res, next) {
 	user     : user.id
     }, function (err, passport) {
       if (err) {
-console.log("2");
-console.log(err);
         if (err.code === 'E_VALIDATION') {
           req.flash('error', 'Error.Passport.Password.Invalid');
         }

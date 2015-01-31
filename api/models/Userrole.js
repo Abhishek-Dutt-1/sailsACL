@@ -7,12 +7,22 @@
 
 module.exports = {
 
-  attributes: {
-    name: {
-        type: 'string',
-        required: true
+    schema: true,
+
+    attributes: {
+        name: {
+            type: 'string',
+            required: true,
+            unique: true
+        },
+        /*
+        userrolee: {
+            collection: 'user',
+            via: 'userroles',    // Corresponding to User model
+            //dominant: true
+        }
+        */
     }
-  }
 
 };
 

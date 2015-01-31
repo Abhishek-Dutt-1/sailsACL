@@ -11,7 +11,7 @@ function hashPassword (passport, next) {
     bcrypt.hash(passport.password, 10, function (err, hash) {
       passport.password = hash;
 // encrypt the passwordConfirmation also
-	passport.passwordConfirmation = hash;
+passport.passwordConfirmation = hash;
       next(err, passport);
     });
   } else {
@@ -103,7 +103,7 @@ var Passport = {
    * @param {Function} next
    */
   beforeCreate: function (passport, next) {
-console.log(passport);
+//console.log(passport);
     hashPassword(passport, next);
   },
 

@@ -154,24 +154,27 @@ var AuthController = {
 
     passport.callback(req, res, function (err, user) {
       if (err) {
-	return res.send(401, "AuthController:: Registeration Failed.");
+        return res.send(401, err);
+        return res.send(401, "AuthController:: Registeration Failed.");
         //return tryAgain();
       }
 
       req.login(user, function (err) {
         if (err) {
-		console.log(err);
-		//return err;
-	  return res.send(401, "AuthController:: Login Failed.");
-          //return tryAgain();
+            console.log(err);
+            //return err;
+            return res.send(401, "AuthController:: Login Failed.");
+            //return tryAgain();
         }
 
         // Upon successful login, send the user to the homepage were req.user
         // will available.
-////////////////////////////////FINALLY SEND THE TOKEN
-        var token = jwt.sign(user.id, 'secret');
-        console.log(token);
-        return res.send({token: token, user: req.user});
+        ////////////////////////////////FINALLY SEND THE TOKEN
+        var token = jwt.sign(user.id, 'CHANGE_THIS_VALUE');
+        User.findOne(user.id).populate('userroles').exec(function(err, user) {
+	        return res.send({token: token, user: req.user});
+        });
+        
         //return res.send(req.user);
         //res.redirect('/');
       });
