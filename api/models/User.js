@@ -12,6 +12,9 @@ module.exports = {
         username  : { type: 'string', unique: false, defaultsTo: null },
         country   : { type: 'string', unique: false },
         email     : { type: 'email',  unique: true, required: true },
+        emailVerificationToken: { type: 'string', required: false },     // token sent in verification email during registration
+        emailVerificationTokenExpires: { type: 'datetime', required: false },  
+
         passports : { collection: 'Passport', via: 'user' },
 
         // Add a One Way Relation to UserRoles
@@ -39,20 +42,22 @@ module.exports = {
    * @param {Function} next
    */
   beforeCreate: function (user, next) {
+    // for now set username 
 	user.username = user.email;
 	/* This did not work */
 	// check bootstrap config file
     /*
 	var defaultUserrole = {name: 'Registered'};
 	Userrole.findOne(defaultUserrole).exec(function(err, role) {
+        if(err) {
+            console.log("Could not find default userrole");
+            next();
+        }
         user.firstname = "BEFORE CREATE";
-        console.log(role);
-		console.log(user);
-		user.userroles = [role.id];
+		user.userroles.add(role.id);
 		console.log("--__--");
 		console.log(user);
 		console.log("--__--");
-        console.log(next);
 		next();
 	});
     */
@@ -67,7 +72,8 @@ module.exports = {
     if (data.userroles) {return User.create(data).exec(cb);}
     // Otherwise look up the default userrole
 	// check bootstrap config file for defaults //
-    Userrole.findOne( {name: "Registered"} ).exec(function(err, defaultUserrole) {
+	var configDefaultUserrole = sails.config.appConfig.defaultUserroles.unverifiedEmail;
+    Userrole.findOne( configDefaultUserrole ).exec(function(err, defaultUserrole) {
       // Return in case of error
       if (err) {return cb(err);}
       // Assuming the default pet exists, attach it

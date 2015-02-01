@@ -70,6 +70,12 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+
+'get /auth/getdefaultusers': 'AuthController.getDefaultUsers',
+// Verify registered email
+'get /verify/:token': 'AuthController.verifyEmail',
+// -----------
+
 'get /login': 'AuthController.login',
 'get /logout': 'AuthController.logout',
 'get /register': 'AuthController.register',
@@ -81,6 +87,5 @@ module.exports.routes = {
 'get /auth/:provider/callback': 'AuthController.callback',
 'get /auth/:provider/:action': 'AuthController.callback',
 
-// -----------
-'get /testauth': 'AuthController.testAuth',
+
 };

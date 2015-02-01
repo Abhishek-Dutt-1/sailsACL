@@ -69,10 +69,10 @@ exports.register = function (req, res, next) {
     }
 
     Passport.create({
-	protocol : 'local',
-	password : password,
-	passwordConfirmation: passwordConfirmation,
-	user     : user.id
+        protocol : 'local',
+        password : password,
+        passwordConfirmation: passwordConfirmation,
+        user     : user.id
     }, function (err, passport) {
       if (err) {
         if (err.code === 'E_VALIDATION') {
