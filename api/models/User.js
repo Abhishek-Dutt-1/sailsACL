@@ -14,7 +14,7 @@ module.exports = {
         email     : { type: 'email',  unique: true, required: true },
         emailVerificationToken: { type: 'string', required: false },     // token sent in verification email during registration
         emailVerificationTokenExpires: { type: 'datetime', required: false },  
-
+        isAdmin   : { type: 'boolean', required: false, defaultsTo: false },    // 
         passports : { collection: 'Passport', via: 'user' },
 
         // Add a One Way Relation to UserRoles

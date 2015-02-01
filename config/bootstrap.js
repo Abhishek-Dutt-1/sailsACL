@@ -95,6 +95,25 @@ module.exports.bootstrap = function(cb) {
     });
 /////////////////// End default ACL setup
 
+    // Create default users
+    // defined in local.js
+    sails.config.appConfig.initAdminUsers.forEach(function(user) {
+
+        User.findOrCreate({email: user.email}, user).exec(function(err, newUser) {
+            if(err) console.log(err);
+            console.log(newUser);
+            Passport.findOrCreate({user: newUser.id, protocol: 'local'}, {
+                protocol: 'local',
+                password: user.password,
+                passwordConfirmation: user.password,
+                user: newUser.id
+            }).exec(function(err2, passport) {
+                if(err2) console.log(err2);
+                console.log(passport);
+            });
+        });
+
+    });
 
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)

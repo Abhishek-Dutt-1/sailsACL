@@ -47,8 +47,5 @@ module.exports.appConfig = {
     // Defaults for Guest user (used by UI), given userroles must also be defined above
     defaultUsers: { 
         unregisteredUser: { firstname: 'Guest', lastname: '', userroles: [{name: 'Guest'}] },
-    }
-
-    
-
+    },
 }
