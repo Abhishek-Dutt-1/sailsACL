@@ -20,14 +20,18 @@ function getUserRoles(user)
             });
             return userRoles;
 
-        });
+            });
     }
 }
 
 module.exports = {
 	
 	isAllowed: function(user, opts, cb) {
-		
+
+        if(user.isAdmin === true) {
+            cb(null, true);
+        };
+ 		
 		// opts is an array: [{ group: '...', permission: [..] }, { group: '...', permission: [..] }]
 		var promises = []
 		opts.forEach( function(opt) {

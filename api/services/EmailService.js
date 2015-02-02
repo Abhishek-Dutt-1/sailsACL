@@ -64,7 +64,7 @@ module.exports = {
         mailOptions.html = html; 
         mailOptions.to = receiver.email; 
         mailOptions.from = server.senderEmail; 
-        console.log(mailOptions);
+        //console.log(mailOptions);
         this.sendEmail(mailOptions);
 
     }
