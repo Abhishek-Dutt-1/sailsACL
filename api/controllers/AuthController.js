@@ -200,9 +200,12 @@ var AuthController = {
 
             req.login(user, function(err) {
                 if (err) {
+
+                    //console.log( req.flash('error') );
                     console.log(err);
                     //return err;
-                    return res.send(401, "AuthController:: Login Failed.");
+                    return res.badRequest('Incorrect EmailId or Password.');
+                    //return res.send(401, "Incorrect LoginId or Password.");
                     //return tryAgain();
                 };
 
@@ -210,8 +213,19 @@ var AuthController = {
                 // will available.
                 ////////////////////////////////FINALLY SEND THE TOKEN
                 var token = jwt.sign(user.id, 'CHANGE_THIS_VALUE');
-                User.findOne(user.id).populate('userroles').exec(function(err, user) {
-                    return res.send({token: token, user: req.user});
+                User.findOne(user.id).populate('userroles').exec(function(err, userWithUserroles) {
+                    delete userWithUserroles.emailVerificationToken;
+                    delete userWithUserroles.emailVerificationTokenExpires;
+                    delete userWithUserroles.updatedAt;
+                    //delete userWithUserroles.id;
+                    if(userWithUserroles.userroles) {
+                        userWithUserroles.userroles.forEach(function(el,i,arr) {
+                            delete arr[i].createdAt;
+                            delete arr[i].updatedAt;
+                            delete arr[i].id;
+                        });
+                    };
+                    return res.send({token: token, user: userWithUserroles});
                 });
                 
                 //return res.send(req.user);
