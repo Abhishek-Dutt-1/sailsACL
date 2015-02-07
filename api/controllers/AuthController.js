@@ -2,15 +2,16 @@ var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
 
     // Private function to re/send email verification
-var sendEmailVerificationEmail = function(user) {
+var sendEmailVerificationEmail = function(user, cb) {
     crypto.randomBytes(48, function(ex, buf) {
         var emailToken = buf.toString('hex');
         user.emailVerificationToken = emailToken;
         user.emailVerificationTokenExpires = Date.now() + 3600000 * 24 * 7;
         user.save(function(err, savedUser) {
-            if(err) return err;
-            console.log(savedUser);
-            EmailService.sendEmailVerificationEmail( {firstname: savedUser.firstname, lastname: savedUser.lastname, email: savedUser.email, token: savedUser.emailVerificationToken} );
+            if(err) return cb(err);
+            //console.log(savedUser);
+            var mailObj = {firstname: savedUser.firstname, lastname: savedUser.lastname, email: savedUser.email, token: savedUser.emailVerificationToken};
+            EmailService.sendEmailVerificationEmail( mailObj, cb );
         });
     });
 };
@@ -182,55 +183,49 @@ var AuthController = {
             // chech switch above in tryAgain()
             // Send email
             if(req.param('action') == 'register') {
-                sendEmailVerificationEmail(user);
-                /*
-                crypto.randomBytes(48, function(ex, buf) {
-                    var emailToken = buf.toString('hex');
-                    user.emailVerificationToken = emailToken;
-                    user.emailVerificationTokenExpires = Date.now() + 3600000 * 24 * 7;
-
-                    user.save(function(err, savedUser) {
-                        if(err) return err;
-                        console.log(savedUser);
-                        EmailService.sendEmailVerificationEmail( {firstname: savedUser.firstname, lastname: savedUser.lastname, email: savedUser.email, token: savedUser.emailVerificationToken} );
-                    });
+                sendEmailVerificationEmail(user, function(err, success) {
+                    if(err) return res.badRequest('We tried sending a verification email to you email id but failed. You can try resending it later.');
+                    return res.ok( {status: 200, data: 'We have sent a verification email to your email id. Meanwhile you can log in, but certain functionality might be restricted.'} );
                 });
-                */
-            }
+            };
 
-            req.login(user, function(err) {
-                if (err) {
+            // Check if its a register or login 
+            // undefined for login
+            if(req.param('action') == undefined) {
 
-                    //console.log( req.flash('error') );
-                    console.log(err);
-                    //return err;
-                    return res.badRequest('Incorrect EmailId or Password.');
-                    //return res.send(401, "Incorrect LoginId or Password.");
-                    //return tryAgain();
-                };
-
-                // Upon successful login, send the user to the homepage were req.user
-                // will available.
-                ////////////////////////////////FINALLY SEND THE TOKEN
-                var token = jwt.sign(user.id, 'CHANGE_THIS_VALUE');
-                User.findOne(user.id).populate('userroles').exec(function(err, userWithUserroles) {
-                    delete userWithUserroles.emailVerificationToken;
-                    delete userWithUserroles.emailVerificationTokenExpires;
-                    delete userWithUserroles.updatedAt;
-                    //delete userWithUserroles.id;
-                    if(userWithUserroles.userroles) {
-                        userWithUserroles.userroles.forEach(function(el,i,arr) {
-                            delete arr[i].createdAt;
-                            delete arr[i].updatedAt;
-                            delete arr[i].id;
-                        });
+                req.login(user, function(err) {
+                    if (err) {
+                        //console.log( req.flash('error') );
+                        console.log(err);
+                        //return err;
+                        return res.badRequest('Incorrect EmailId or Password.');
+                        //return res.send(401, "Incorrect LoginId or Password.");
+                        //return tryAgain();
                     };
-                    return res.send({token: token, user: userWithUserroles});
+
+                    // Upon successful login, send the user to the homepage were req.user
+                    // will available.
+                    ////////////////////////////////FINALLY SEND THE TOKEN
+                    var token = jwt.sign(user.id, 'CHANGE_THIS_VALUE');
+                    User.findOne(user.id).populate('userroles').exec(function(err, userWithUserroles) {
+                        delete userWithUserroles.emailVerificationToken;
+                        delete userWithUserroles.emailVerificationTokenExpires;
+                        delete userWithUserroles.updatedAt;
+                        //delete userWithUserroles.id;
+                        if(userWithUserroles.userroles) {
+                            userWithUserroles.userroles.forEach(function(el,i,arr) {
+                                delete arr[i].createdAt;
+                                delete arr[i].updatedAt;
+                                delete arr[i].id;
+                            });
+                        };
+                        return res.send({token: token, user: userWithUserroles});
+                    });
+                    //return res.send(req.user);
+                    //res.redirect('/');
                 });
-                
-                //return res.send(req.user);
-                //res.redirect('/');
-            });
+
+            };
         });
     },
 
@@ -248,14 +243,13 @@ var AuthController = {
         return res.send(sails.config.appConfig.defaultUsers );
     },
 
-    // verfiy email based on token send to the registered email
+    // verfiy email based on token sent to the registered email
     verifyEmail: function(req, res) {
         console.log(req.param('token'));
         User.findOne({emailVerificationToken: req.param('token'), emailVerificationTokenExpires: { '>': Date.now() }  }, function(err, user) {
             if(!user) {
                 console.log("Token Error");
-                console.log(err);
-                return res.send("Password Token is invalid or expiered");
+                return res.badRequest("Token is invalid or expiered. Try resending the verification email by logging in.");
             } else {
                 user.emailVerificationToken = null;
                 user.emailVerificationTokenExpires = false;
@@ -274,7 +268,7 @@ var AuthController = {
                     }
                     user.save(function(err2, savedUser) {
                         if(err2) return err2;
-                        return res.send("Yo! All Done.");
+                        return res.ok({data: "Email successfully verified."});
                     });
                 }));
             };

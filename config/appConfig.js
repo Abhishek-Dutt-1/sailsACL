@@ -1,7 +1,6 @@
 module.exports.appConfig = {
 
     constants: {
-
         // Permissions ::
         // Display text for guest user
         PERM_ANONYMOUS_LABEL:  "Anonymous",
@@ -18,23 +17,20 @@ module.exports.appConfig = {
         {
             // Default userrole for new registered user
             role: {name: 'Registered'},
-            perm: { group: 'ui', permission: 'show admin menu'} 
         },
         {
-            role: {name: 'The_Two'},
-            perm: { group: 'ui', permission: 'show admin menu'} 
-        },
-        {
-            role: {name: 'The_One'}, 
-            perm: { group: 'ui', permission: 'show admin menu'} 
-        },
-        {
+            // Defualt userrole for non logged in user
             role: {name: 'Guest'},
         },
         {
+            // Default userrole for newly registered user
             role: {name: 'Unverified Email'}
+        },
+        {
+            role: {name: 'The_One'}, 
+            perm: { group: 'Test', permission: 'Test permission'} 
         }
-   ],
+    ],
 
     // Defualt userrole assigned to a new registered user
     // must be already created by initSetupACLDefaults above
@@ -47,5 +43,11 @@ module.exports.appConfig = {
     // Defaults for Guest user (used by UI), given userroles must also be defined above
     defaultUsers: { 
         unregisteredUser: { firstname: 'Guest', lastname: '', userroles: [{name: 'Guest'}] },
+    },
+
+    // Address of frontend, used by EmailService to verify email id
+    frontEnd: {
+        url: 'http://localhost:9000/#',
+        adminEmail: 'abhishek.india@gmail.com'
     },
 }
