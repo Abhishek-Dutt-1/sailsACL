@@ -1,7 +1,7 @@
 /**
- * ArticleController
+ * PostController
  *
- * @description :: Server-side logic for managing Articles
+ * @description :: Server-side logic for managing posts
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 

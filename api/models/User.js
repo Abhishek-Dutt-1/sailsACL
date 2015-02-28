@@ -24,9 +24,9 @@ module.exports = {
             //dominant: true
         },
         // one to many relation to track users articles
-        articles: {
-            collection: 'article',
-            via: 'postedBy'
+        posts: {
+            collection: 'post',
+            via: 'postedby'
         },
         // one to many relation to track users comments
         comments: {
@@ -35,56 +35,56 @@ module.exports = {
         },
     },
 
-  /**
-   * Callback to be run before creating a User.
-   *
-   * @param {Object}   user The soon-to-be-created User
-   * @param {Function} next
-   */
-  beforeCreate: function (user, next) {
-    // for now set username 
-	user.username = user.email;
-	/* This did not work */
-	// check bootstrap config file
-    /*
-	var defaultUserrole = {name: 'Registered'};
-	Userrole.findOne(defaultUserrole).exec(function(err, role) {
-        if(err) {
-            console.log("Could not find default userrole");
-            next();
-        }
-        user.firstname = "BEFORE CREATE";
-		user.userroles.add(role.id);
-		console.log("--__--");
-		console.log(user);
-		console.log("--__--");
-		next();
-	});
+    /**
+    * Callback to be run before creating a User.
+    *
+    * @param {Object}   user The soon-to-be-created User
+    * @param {Function} next
     */
-	next();
-  },
+    beforeCreate: function (user, next) {
+        // for now set username 
+        user.username = user.email;
+        /* This did not work */
+        // check bootstrap config file
+        /*
+        var defaultUserrole = {name: 'Registered'};
+        Userrole.findOne(defaultUserrole).exec(function(err, role) {
+            if(err) {
+                console.log("Could not find default userrole");
+                next();
+            }
+            user.firstname = "BEFORE CREATE";
+            user.userroles.add(role.id);
+            console.log("--__--");
+            console.log(user);
+            console.log("--__--");
+            next();
+        });
+        */
+        next();
+    },
 
-// Custom function to create a user
-// this is just to create a default userrole
-//see: http://stackoverflow.com/questions/27971878/sailsjs-add-one-to-many-association-to-a-model-during-beforecreate
-  createUserWithDefaults: function(data, cb) {
-    // If there are already userroles specified, just use those
-    if (data.userroles) {return User.create(data).exec(cb);}
-    // Otherwise look up the default userrole
-	// check bootstrap config file for defaults //
-	var configDefaultUserrole = sails.config.appConfig.defaultUserroles.unverifiedEmail;
-    Userrole.findOne( configDefaultUserrole ).exec(function(err, defaultUserrole) {
-      // Return in case of error
-      if (err) {return cb(err);}
-      // Assuming the default pet exists, attach it
-      if (defaultUserrole) {
-        console.log("SETTING DEFAULT Userrole", defaultUserrole.id);
-        data.userroles = [defaultUserrole.id];
-      }
-      // Create the user
-      return User.create(data).exec(cb);
-    });
-  },
+    // Custom function to create a user
+    // this is just to create a default userrole
+    //see: http://stackoverflow.com/questions/27971878/sailsjs-add-one-to-many-association-to-a-model-during-beforecreate
+    createUserWithDefaults: function(data, cb) {
+        // If there are already userroles specified, just use those
+        if (data.userroles) {return User.create(data).exec(cb);}
+        // Otherwise look up the default userrole
+    	// check bootstrap config file for defaults //
+    	var configDefaultUserrole = sails.config.appConfig.defaultUserroles.unverifiedEmail;
+        Userrole.findOne( configDefaultUserrole ).exec(function(err, defaultUserrole) {
+            // Return in case of error
+            if (err) {return cb(err);}
+            // Assuming the default pet exists, attach it
+            if (defaultUserrole) {
+            console.log("SETTING DEFAULT Userrole", defaultUserrole.id);
+            data.userroles = [defaultUserrole.id];
+            }
+            // Create the user
+            return User.create(data).exec(cb);
+        });
+    },
 
 };
 
