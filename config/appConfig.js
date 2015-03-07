@@ -27,8 +27,38 @@ module.exports.appConfig = {
             role: {name: 'Unverified Email'}
         },
         {
-            role: {name: 'The_One'}, 
+            role: {name: 'Moderator'}, 
             perm: { group: 'Test', permission: 'Test permission'} 
+        },
+        {
+            role: {name: 'Registered'},
+            perm: {group: 'post', permission: 'can delete own post'}
+        },
+        {
+            role: {name: 'Unverified Email'},
+            perm: {group: 'post', permission: 'can delete own post'}
+        },
+        {
+            role: {name: 'Moderator'},
+            perm: {group: 'post', permission: 'can delete own post'}
+        },
+        {
+            role: {name: 'Registered'},
+            perm: {group: 'post', permission: 'can edit own post'}
+        },
+        {
+            role: {name: 'Unverified Email'},
+            perm: {group: 'post', permission: 'can edit own post'}
+        },
+        {
+            role: {name: 'Moderator'},
+            perm: {group: 'post', permission: 'can edit own post'}
+        },
+        {
+            perm: {group: 'post', permission: 'can delete any post'}
+        },
+        {
+            perm: {group: 'post', permission: 'can edit any post'}
         }
     ],
 

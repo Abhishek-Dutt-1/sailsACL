@@ -18,6 +18,11 @@ module.exports = {
         description: {
             type: 'string'
         },
+        type: {
+            type: 'string',
+            defaultsTo: 'text',
+            required: true
+        },
         image: {
             type: 'string'
         },

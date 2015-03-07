@@ -72,6 +72,7 @@ module.exports.bootstrap = function(cb) {
                         // due to asyncronousity of .save()
                         relationExists = false;
                         perm.userroles.forEach( function(userrole) {
+                            // this should be by name instead of id
                             if(userrole.id == role.id) {
                                 relationExists = true;
                             };
