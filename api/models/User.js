@@ -31,7 +31,7 @@ module.exports = {
         // one to many relation to track users comments
         comments: {
             collection: 'comment',
-            via: 'postedBy'
+            via: 'postedby'
         },
     },
 

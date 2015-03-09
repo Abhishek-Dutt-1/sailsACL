@@ -87,5 +87,6 @@ module.exports.routes = {
 'get /auth/:provider/callback': 'AuthController.callback',
 'get /auth/:provider/:action': 'AuthController.callback',
 
+//'put /addcommenttopost': 'PostController.addCommentToPost',
 
 };

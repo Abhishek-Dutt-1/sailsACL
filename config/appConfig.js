@@ -32,6 +32,14 @@ module.exports.appConfig = {
         },
         {
             role: {name: 'Registered'},
+            perm: {group: 'post', permission: 'can create post'}
+        },
+        {
+            role: {name: 'Moderator'},
+            perm: {group: 'post', permission: 'can create post'}
+        },
+        {
+            role: {name: 'Registered'},
             perm: {group: 'post', permission: 'can delete own post'}
         },
         {
@@ -59,7 +67,20 @@ module.exports.appConfig = {
         },
         {
             perm: {group: 'post', permission: 'can edit any post'}
-        }
+        },
+        {
+            role: {name: 'Registered'},
+            perm: {group: 'comment', permission: 'can create comment'}
+        },
+        {
+            role: {name: 'Registered'},
+            perm: {group: 'comment', permission: 'can delete own comment'}
+        },
+        {
+            role: {name: 'Moderator'},
+            perm: {group: 'comment', permission: 'can delete any comment'}
+        },
+ 
     ],
 
     // Defualt userrole assigned to a new registered user
@@ -71,9 +92,13 @@ module.exports.appConfig = {
     },
 
     // Defaults for Guest user (used by UI), given userroles must also be defined above
+    // This user is created at bootstrap (check local.js) with id:2
+    unregisteredUser: { email: 'guest@user.com' },
+    /*
     defaultUsers: {
-        unregisteredUser: { firstname: 'Guest', lastname: '', userroles: [{name: 'Guest'}] },
+        unregisteredUser: { firstname: 'Guest', lastname: '', email: 'guest@user.com', userroles: [{name: 'Guest'}] },
     },
+    */
 
     // Address of frontend, used by EmailService to verify email id
     frontEnd: {

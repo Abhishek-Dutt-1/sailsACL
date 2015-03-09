@@ -35,6 +35,10 @@ module.exports = {
         },
         postedby: {
             model: 'user'
+        },
+        comments: {
+            collection: 'comment',
+            via: 'commentedon'
         }
     }
 

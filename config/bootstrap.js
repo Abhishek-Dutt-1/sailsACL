@@ -100,9 +100,26 @@ module.exports.bootstrap = function(cb) {
     // defined in local.js
     sails.config.appConfig.initAdminUsers.forEach(function(user) {
 
+        var userroles;
+        if(user.userroles) {
+            console.log(user);
+            userroles = user.userroles;
+            delete user.userroles;
+            console.log(user);
+        }
         User.findOrCreate({email: user.email}, user).exec(function(err, newUser) {
             if(err) console.log(err);
             console.log(newUser);
+            /*
+            if(userroles) {
+                userroles.forEach(function(userrole) {
+                    newUser.userroles.add(userrole);
+                });
+                newUser.save(function(err, res) {
+                    console.log(res); 
+                });
+            };
+            */
             Passport.findOrCreate({user: newUser.id, protocol: 'local'}, {
                 protocol: 'local',
                 password: user.password,

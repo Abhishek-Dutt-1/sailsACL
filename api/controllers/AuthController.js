@@ -240,7 +240,11 @@ var AuthController = {
     },
 
     getDefaultUsers: function(req, res) {
-        return res.send(sails.config.appConfig.defaultUsers );
+        User.findOne(sails.config.appConfig.unregisteredUser).populate('userroles').exec(function(err, user) {
+            if(err) return err;
+            return res.send(user);
+        });
+        //return res.send(sails.config.appConfig.defaultUsers );
     },
 
     // verfiy email based on token sent to the registered email
