@@ -33,6 +33,11 @@ module.exports = {
             collection: 'comment',
             via: 'postedby'
         },
+        // Track User's votes
+        votes: {
+            collection: 'vote',
+            via: 'votedBy'
+        }
     },
 
     /**

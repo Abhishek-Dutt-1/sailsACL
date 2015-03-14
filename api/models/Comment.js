@@ -9,7 +9,7 @@ module.exports = {
 
     attributes: {
        body: {
-            type: 'string',
+            type: 'text',
             required: true
         },
         // one to many realtion b/w user and comments

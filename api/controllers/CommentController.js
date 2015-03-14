@@ -8,6 +8,7 @@
 module.exports = {
 
     // Add comment reply to a parent comment
+    /*
     addReplyToComment: function(req, res) {
         Comment.findOne({id: req.param('parentcommentid')}, function(err, comment) {
             if(err) return err;
@@ -24,6 +25,7 @@ module.exports = {
             };
         });
     },
+    */
 
     _config: {
         shortcuts: false

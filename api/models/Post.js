@@ -16,8 +16,9 @@ module.exports = {
             type: 'string'
         },
         description: {
-            type: 'string'
+            type: 'text'
         },
+        // Type of post: link or text
         type: {
             type: 'string',
             defaultsTo: 'text',
@@ -39,8 +40,13 @@ module.exports = {
         comments: {
             collection: 'comment',
             via: 'commentedon'
-        }
+        },
+        votes: {
+            collection: 'vote',
+            via: 'votedOn'
+        },
+        votesUp: {type: 'integer', defaultsTo: 0},
+        votesDown: {type: 'integer', defaultsTo: 0},
     }
-
 };
 
