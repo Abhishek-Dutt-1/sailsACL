@@ -74,6 +74,11 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  // headers: 'content-type'
+    // headers: 'content-type'
+// Added Authorization as front end will add this header
+// Format: Authorization: Bearer VERY.LONG.TOKEN
+// ref: AuthenticationService frontend
+// Default was 'content-type'
+    headers: 'content-type, Authorization',
 
 };

@@ -59,5 +59,5 @@ module.exports.policies = {
 		'*': true,
 	}
 */
-'*': ['passport']
+'*': ['passport', 'AuthToken']
 };

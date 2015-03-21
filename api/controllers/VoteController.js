@@ -47,6 +47,8 @@ module.exports = {
             voteValue: -1,  // Vote value is required if user has given both upvote and downvote, then cancel only the required vote
         };
     */
+        // This is not correct, vote value can be manupulated
+        // Just use postid and votedbyid and delete the vote, assuming 1 vote per user
         Vote.destroy(req.params.all()).exec(function(err, deletedVote) {
             console.log(deletedVote);
             if(err) return err;

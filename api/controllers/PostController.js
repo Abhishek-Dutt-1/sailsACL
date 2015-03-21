@@ -37,17 +37,19 @@ module.exports = {
     // Return a SINGLE post by id, deep populating associations
     getPostById: function(req, res) {
 
-        Post.findOne(req.allParams()).populate('postedby').populate('comments').exec(function(err, post) {
+        //return res.json( req.authToken );
+        Post.findOne(req.param('id')).populate('postedby').populate('comments').populate('votes', {'votedBy': req.authToken}).exec(function(err, post) {
+
 // get array of child comments ids
 // find all of them with populated fields
 // loop through post comments, attach child comments
 // profit
             // modifing original found 'post' seems to not work
             var post2 = _.clone(post);
-            delete post2.comments;      // comments does not have postedby, childComments
+//            delete post2.comments;      // comments does not have postedby, childComments
 
             if(err) return err;
-            var commentIds = []
+            var commentIds = [];
             var childCommentIds = [];
             post.comments.forEach(function(comment) {
                 commentIds.push(comment.id);       // lvl 1 comments

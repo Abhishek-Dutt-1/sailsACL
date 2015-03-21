@@ -205,8 +205,10 @@ var AuthController = {
 
                     // Upon successful login, send the user to the homepage were req.user
                     // will available.
-                    ////////////////////////////////FINALLY SEND THE TOKEN
-                    var token = jwt.sign(user.id, 'CHANGE_THIS_VALUE');
+                    //////////////////////FINALLY SEND THE TOKEN
+                    var token = AuthTokenService.issueAuthToken(user.id);
+                    //var tokenVerify = jwt.verify(token, sails.config.appConfig.jwtSecret);
+                    //var tokenDecode = jwt.decode(token);
                     User.findOne(user.id).populate('userroles').exec(function(err, userWithUserroles) {
                         delete userWithUserroles.emailVerificationToken;
                         delete userWithUserroles.emailVerificationTokenExpires;
@@ -219,7 +221,8 @@ var AuthController = {
                                 delete arr[i].id;
                             });
                         };
-                        return res.send({token: token, user: userWithUserroles});
+                        userWithUserroles.token = token;
+                        return res.send({user: userWithUserroles});
                     });
                     //return res.send(req.user);
                     //res.redirect('/');
