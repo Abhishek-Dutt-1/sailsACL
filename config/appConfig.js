@@ -77,7 +77,7 @@ module.exports.appConfig = {
             perm: {group: 'comment', permission: 'can delete own comment'}
         },
         {
-            role: {name: 'moderator'},
+            role: {name: 'Moderator'},
             perm: {group: 'comment', permission: 'can delete any comment'}
         },
         {
@@ -85,9 +85,18 @@ module.exports.appConfig = {
             perm: {group: 'vote', permission: 'can vote on own post'}
         },
         {
+            role: {name: 'Registered'},
+            perm: {group: 'vote', permission: 'can vote on any post'}
+        },
+        {
+            role: {name: 'Moderator'},
+            perm: {group: 'vote', permission: 'can vote on own post'}
+        },
+        {
             role: {name: 'Moderator'},
             perm: {group: 'vote', permission: 'can vote on any post'}
         },
+ 
     ],
 
     // Defualt userrole assigned to a new registered user

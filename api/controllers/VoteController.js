@@ -10,11 +10,19 @@ module.exports = {
     // Does both upvote and down vote (inspite of the name)
     // POST
     addVoteToPost: function(req, res) {
+
+        // Check permission
+        if(!req.authToken) return res.badRequest('Must be logged in to vote');
+
         // req.params.all() has the vote object, same as the Vote model
         // 1. Create a new vote
-        Vote.create(req.params.all()).then(function(newVote) {
-            console.log(newVote);
-            console.log( req.param('votedOn') );
+        var vote = req.params.all();
+        vote.votedBy = req.authToken;   // dont trust front end
+        //Vote.create(req.params.all()).then(function(newVote) {
+        Vote.create(vote).then(function(newVote) {
+
+            //console.log(newVote);
+            //console.log( req.param('votedOn') );
             // 2. Find post voted on
             Post.findOne(req.param('votedOn')).exec(function(err, post) {
                 if(err) return err;
@@ -39,21 +47,28 @@ module.exports = {
     // Undo a user's vote
     cancelUsersVote: function(req, res) {
 
-    /*
-        var vote = {
-            votedOn: post.id,
-            votedBy: AuthenticationService.getCurrentUser().id,
-            voteType: 1,
-            voteValue: -1,  // Vote value is required if user has given both upvote and downvote, then cancel only the required vote
-        };
-    */
-        // This is not correct, vote value can be manupulated
-        // Just use postid and votedbyid and delete the vote, assuming 1 vote per user
-        Vote.destroy(req.params.all()).exec(function(err, deletedVote) {
-            console.log(deletedVote);
+        // Check permission
+        if(!req.authToken) return res.badRequest('Must be logged in to vote');
+
+/*
+    var vote = {
+        votedOn: post.id,
+        votedBy: AuthenticationService.getCurrentUser().id,
+        voteType: 1,
+        voteValue: -1,  // Vote value is required if user has given both upvote and downvote, then cancel only the required vote
+    };
+*/
+        var vote = req.params.all();
+        delete vote.id;
+        vote.votedBy = req.authToken;   // dont trust front end
+        //console.log("Deleting this vote");
+        //console.log(vote);
+        Vote.destroy(vote).exec(function(err, deletedVote) {
+            //console.log("Deleted this vote");
+            //console.log(deletedVote);
             if(err) return err;
             Post.findOne(req.param('votedOn')).exec(function(err2, post) {
-                console.log(post);
+                //console.log(post);
                 if(req.param('voteValue') > 0) {
                     post.votesUp = post.votesUp - 1;
                 } else {

@@ -27,10 +27,11 @@ module.exports = {
         image: {
             type: 'string'
         },
-        /*
-        geo: {
+        // Location Info
+        city: { 
+            model: 'cities' 
         },
-        */
+        // End Location Info
         nsfw: {
             type: 'boolean'
         },
@@ -49,4 +50,3 @@ module.exports = {
         votesDown: {type: 'integer', defaultsTo: 0},
     }
 };
-

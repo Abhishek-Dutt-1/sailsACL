@@ -4,13 +4,13 @@ module.exports = {
     schema: true,
 
     attributes: {
-        firstname : { type: 'string', unique: false },
-        lastname  : { type: 'string', unique: false },
+        firstname : { type: 'string' },
+        lastname  : { type: 'string' },
         // username  : { type: 'string', unique: true },
         // Maybe later this could be used for vanity url
         // for now this is being filled automatically by beforeCreate function
         username  : { type: 'string', unique: false, defaultsTo: null },
-        country   : { type: 'string', unique: false },
+        country   : { type: 'string' },
         email     : { type: 'email',  unique: true, required: true },
         emailVerificationToken: { type: 'string', required: false },     // token sent in verification email during registration
         emailVerificationTokenExpires: { type: 'datetime', required: false },  
@@ -37,7 +37,14 @@ module.exports = {
         votes: {
             collection: 'vote',
             via: 'votedBy'
-        }
+        },
+        // Location Info :: Profile
+        city: { 
+            model: 'cities' 
+        },
+        // End Location Info
+        // Location Info :: Settings
+
     },
 
     /**
