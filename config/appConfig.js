@@ -121,4 +121,22 @@ module.exports.appConfig = {
         url: 'http://localhost:9000/#',
         adminEmail: 'abhishek.india@gmail.com'
     },
+
+    // Init default models
+    defaultModels: [
+        // ASIA
+        {
+            type: "cities",
+            data: {continent: "Asia", country: "India", state: "Uttar Pradesh", city: "Lucknow"}
+        },
+        {
+            type: "cities",
+            data: {continent: "Asia", country: "India", state: "Karnataka", city: "Bangalore"}
+        },
+        // NORTH AMERICA
+       {
+            type: "cities",
+            data: {continent: "North America", country: "USA", state: "Texas", city: "Huston"}
+        }
+    ]
 }

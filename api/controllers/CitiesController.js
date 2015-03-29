@@ -7,6 +7,9 @@
 
 module.exports = {
 
+    /**
+     * Returns a hierachical list of Continents > Countries > States > Cities
+     */
     fetchUniqueLocations: function(req, res) {
         Cities.find({}).exec(function(err, allCities) {
             if(err) return res.badRequest(err);
@@ -17,9 +20,9 @@ module.exports = {
             var cities = [];
 
             continents = _.chain(allCities).pluck('continent').unique().value();
-            countries = _.chain(allCities).pluck('country').unique().value();
-            states = _.chain(allCities).pluck('state').unique().value();
-            cities = _.chain(allCities).pluck('city').unique().value();
+            countries  = _.chain(allCities).pluck('country').unique().value();
+            states     = _.chain(allCities).pluck('state').unique().value();
+            cities     = _.chain(allCities).pluck('city').unique().value();
 
             var continent2 = [];
             continents.forEach(function(continent) {
@@ -45,6 +48,22 @@ module.exports = {
             return res.json(continent2);
         });
     },
+
+    /**
+     * Returns array of all countries
+     * Used in User Registration form
+     */
+     fetchUniqueCountries: function(req, res) {
+
+         Cities.find().exec(function(err, allCountries) {
+             if(err) return err;
+             return res.json( _.chain(allCountries).pluck('country').unique().value() );
+
+             //return res.json(allCountries);
+
+         });
+
+     },
 
 };
 

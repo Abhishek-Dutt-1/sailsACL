@@ -133,7 +133,29 @@ module.exports.bootstrap = function(cb) {
 
     });
 
+    /** 
+     * Create default models
+     */
+    sails.config.appConfig.defaultModels.forEach(function(model) {
+        createDefaultModels(model);
+    });
+
+
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
     cb();
+};
+
+// Create a model
+var createDefaultModels = function(model) {
+    if(model.type === "cities") {
+        Cities.findOrCreate(model.data, model.data).exec(function(err, createdModel){
+            if(err) {
+                console.log(err);
+                return err;
+            }
+            //console.log("Created Model");
+            //console.log(createdModel);
+        });
+    }
 };
