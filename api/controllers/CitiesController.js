@@ -9,10 +9,11 @@ module.exports = {
 
     /**
      * Returns a hierachical list of Continents > Countries > States > Cities
+     * Used in geo location settings modal form
      */
     fetchUniqueLocations: function(req, res) {
         Cities.find({}).exec(function(err, allCities) {
-            if(err) return res.badRequest(err);
+            if(err) return res.badReqest(err);
 
             var continents = [];
             var countries = [];
@@ -31,7 +32,11 @@ module.exports = {
                     var state2 = [];
                     states.forEach(function(state) {
                         var city2 = [];
-                        city2 = _.chain(_.filter(allCities, {continent: continent, country: country, state: state})).pluck('city').value();
+                        var cityTmp = _.chain(_.filter(allCities, {continent: continent, country: country, state: state})).pluck('city').value();
+                        if(cityTmp.length > 0) {
+                            //city2.push( { city: _.chain(_.filter(allCities, {continent: continent, country: country, state: state})).pluck('city').value() } );
+                            city2.push( { city: cityTmp[0] } );
+                        }
                         if(city2.length > 0) {
                             state2.push({state: state, cities: city2});
                         }
@@ -45,7 +50,7 @@ module.exports = {
                 }
             });
 
-            return res.json(continent2);
+            return res.json( [{ planet: 'Earth', continents: continent2 }] );
         });
     },
 

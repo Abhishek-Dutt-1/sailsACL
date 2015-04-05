@@ -10,7 +10,6 @@ module.exports = {
         // Maybe later this could be used for vanity url
         // for now this is being filled automatically by beforeCreate function
         username  : { type: 'string', unique: false, defaultsTo: null },
-        country   : { type: 'string' },
         email     : { type: 'email',  unique: true, required: true },
         emailVerificationToken: { type: 'string', required: false },     // token sent in verification email during registration
         emailVerificationTokenExpires: { type: 'datetime', required: false },  
@@ -39,12 +38,22 @@ module.exports = {
             via: 'votedBy'
         },
         // Location Info :: Profile
-        city: { 
-            model: 'cities' 
-        },
+        // This location info will be tagged to users post
+        planet    : { type: 'array' },
+        continent : { type: 'array' },
+        country   : { type: 'array' },
+        state     : { type: 'array' },
+        city      : { type: 'array' },
         // End Location Info
         // Location Info :: Settings
-
+        // This location info will be used to fetch geo relevant posts
+        // While name is singular, it can hold multiple (hence type = array)
+        planetSetting    : { type: 'array' },
+        continentSetting : { type: 'array' },
+        countrySetting   : { type: 'array' },
+        stateSetting     : { type: 'array' },
+        citySetting      : { type: 'array' },
+        // End Location Settings Info
     },
 
     /**

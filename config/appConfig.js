@@ -138,5 +138,5 @@ module.exports.appConfig = {
             type: "cities",
             data: {continent: "North America", country: "USA", state: "Texas", city: "Huston"}
         }
-    ]
+    ],
 }

@@ -101,25 +101,35 @@ module.exports.bootstrap = function(cb) {
     sails.config.appConfig.initAdminUsers.forEach(function(user) {
 
         var userroles;
-        if(user.userroles) {
-            console.log(user);
+        if(user.userroles && user.userroles.length > 0) {
             userroles = user.userroles;
             delete user.userroles;
-            console.log(user);
         }
         User.findOrCreate({email: user.email}, user).exec(function(err, newUser) {
             if(err) console.log(err);
             console.log(newUser);
-            /*
-            if(userroles) {
-                userroles.forEach(function(userrole) {
-                    newUser.userroles.add(userrole);
-                });
-                newUser.save(function(err, res) {
-                    console.log(res); 
+
+            // THis does not work as foundUserroles is empty []
+            // TODO:: Change this to promise and link with above
+            // Prob create all models first then() add relations
+            if(userroles && userroles.length > 0) {
+                Userrole.find(userroles).exec(function(err, foundUserroles) {
+                    console.log("Finding Userroles");
+                    console.log(userroles);
+                    console.log("Found Usrroles");
+                    console.log(foundUserroles);
+                    foundUserroles.forEach(function(foundUserrole) {
+                        // add() does not takes array
+                        newUser.userroles.add(foundUserrole.id);
+                    });
+                    newUser.save(function(err, res) {
+                        console.log("Saving wiht userrole");
+                        console.log(res); 
+                    });
                 });
             };
-            */
+            
+
             Passport.findOrCreate({user: newUser.id, protocol: 'local'}, {
                 protocol: 'local',
                 password: user.password,
