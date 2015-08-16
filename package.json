@@ -47,10 +47,10 @@
     "type": "git",
     "url": "git://github.com/anonymous node/sails user/sailsTest.git"
   },
-    "engines": {
-        "node": ">= 0.10.0",
-        "npm": ">= 1.4.0"
-    },
+  "engines": {
+    "node": ">= 0.10.0",
+    "npm": ">= 1.4.0"
+  },
   "author": "anonymous node/sails user",
   "license": ""
 }

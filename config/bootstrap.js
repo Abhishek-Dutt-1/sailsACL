@@ -124,7 +124,7 @@ module.exports.bootstrap = function(cb) {
                     });
                     newUser.save(function(err, res) {
                         console.log("Saving wiht userrole");
-                        console.log(res); 
+                        //console.log(res); 
                     });
                 });
             };
@@ -137,7 +137,7 @@ module.exports.bootstrap = function(cb) {
                 user: newUser.id
             }).exec(function(err2, passport) {
                 if(err2) console.log(err2);
-                console.log(passport);
+                //console.log(passport);
             });
         });
 
@@ -159,13 +159,11 @@ module.exports.bootstrap = function(cb) {
 // Create a model
 var createDefaultModels = function(model) {
     if(model.type === "cities") {
-        Cities.findOrCreate(model.data, model.data).exec(function(err, createdModel){
+        Cities.findOrCreate(model.data, model.data).exec(function(err, createdModel) {
             if(err) {
                 console.log(err);
                 return err;
             }
-            //console.log("Created Model");
-            //console.log(createdModel);
         });
     }
 };

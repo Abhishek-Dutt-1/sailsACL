@@ -11,8 +11,10 @@ module.exports = {
 
     attributes: {
         name : { type : 'string', unique : true },
+        description: { type: 'string' },
         posts : { collection: 'post', via: 'boards' },
-    }
+        createdby: { model: 'user' },
+        owner: { model: 'user' }
+    },
 
 };
-

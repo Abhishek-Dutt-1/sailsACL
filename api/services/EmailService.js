@@ -11,7 +11,6 @@ var server = {
 };
 */
 var frontend = sails.config.appConfig.frontEnd;
-console.log(frontend);
 
 module.exports = {
 

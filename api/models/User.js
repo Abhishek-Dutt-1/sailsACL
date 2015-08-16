@@ -22,6 +22,8 @@ module.exports = {
             //via: 'userrolee',    // corresponding to Userrole
             //dominant: true
         },
+        boardscreated: { collection: 'board', via: 'createdby' },
+        boardsowned: { collection: 'board', via: 'owner' },
         // one to many relation to track users articles
         posts: {
             collection: 'post',
